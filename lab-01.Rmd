@@ -269,24 +269,24 @@ visitors_with_nations <- visitors %>%
       region == "Northern Ireland" ~ "Northern Ireland",
       region == "Scotland" ~ "Scotland",
       region == "Wales" ~ "Wales",
-      TRUE ~ "England"
-    )
-  )
+      TRUE ~ "England" ))
 visitors_with_nations %>%
+  group_by(nation) %>% 
+  count(admission) %>%
+  mutate(pct = 100 * n / sum(n)) %>%
   filter(admission == "Free") %>%
-count(nation)
-
-
+  arrange(desc(pct))
 ```
-
 
 ### Exercise n.
 
 _Calculate the percentage change in visitor admissions from 2021 to 2022. Of the tourist attractions in Scotland, sort into increasing numerical order the types of admission charges based on the mean percentage change in visitor numbers._
 
 ```{r Ex_n}
-# Write your code here
-
-
-
+visitors_with_nations%>% 
+  mutate(pct_change = (n_2022-n_2021)/n_2021) %>%
+  filter(nation == "Scotland") %>%
+  group_by(admission) %>%
+  summarise(mean_pct_change = mean(pct_change, na.rm = TRUE)) %>%
+  arrange(mean_pct_change)
 ```
